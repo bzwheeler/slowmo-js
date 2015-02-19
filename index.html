@@ -1,158 +1,110 @@
 <!DOCTYPE html>
+<html>
+<head>
 <meta charset="utf-8">
-<link href="tipsy.css" rel="stylesheet">
+<title>JS Playback</title>
+<link rel="stylesheet" type="text/css" href="jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="jquery-ui.structure.min.css">
+<link rel="stylesheet" type="text/css" href="jquery-ui.theme.min.css">
 <style>
-html {
-  font-family: "Helvetica Neue";
-  font-size: 12px;
-}
+  html {
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+  }
 
-* {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-}
+  * {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
 
-#share-link {
-  display: inline-block;
-  padding: 4px;
-  margin: 4px 0;
-  color: black;
-  text-decoration: none;
-  background: #f0f0f0;
-  border: 1px solid black;
-}
+  #output .error {
+    color: red;
+  }
 
-#share-link:hover {
-  color: white;
-  background: black;
-}
+  #log .debug {
+    color: gray;
+  }
 
-code, textarea, pre.code, .log ol.scope-chain li .scope {
-  font-family: Monaco;
-  font-size: 10px;
-  padding: 4px;
-}
+  #log .print {
+    color: black;
+    background: #f0f0f0;
+    padding: 4px;
+  }
 
-.log {
-  white-space: pre-wrap;
-}
+  #input {
+    display: block;
+    width: 100%;
+    height: 500px;
+  }
 
-.log .error {
-  color: red;
-}
+  .desc {
+    /*font-size: 12px;*/
+    padding: 0.5em;
+    background: gray;
+    color: white;
+  }
 
-.log .debug {
-  color: gray;
-}
+  .desc .code {
+    color: gray;
+  }
 
-.log .print {
-  color: black;
-  background: #f0f0f0;
-  padding: 4px;
-}
+  .active-code {
+    background-color: lightgreen;
+    position: absolute;
+  }
 
-.log .print:before {
-  content: 'print ';
-  color: gray;
-}
+  .supporting-code {
+    background: rgba(0, 0, 0, 0.1);
+    position: absolute;
+  }
 
-.log .code {
-  color: gray;
-}
-
-.log .mini {
-  display: inline-block;
-  border: 1px dotted gray;
-  margin: 4px 4px 4px 0;
-  max-width: 40em;
-  -moz-transition: opacity 1s;
-  -webkit-transition: opacity 1s;
-}
-
-.log .mini pre {
-  white-space: pre-wrap;
-}
-
-.log .mini .desc {
-  font-size: 12px;
-  background: lightgray;
-  color: white;
-}
-
-.highlight-1, .highlight-2 {
-  cursor: default;
-}
-
-.highlight-1 {
-  background: lightgreen;
-}
-
-.highlight-2 {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-#code {
-  display: block;
-  width: 100%;
-  height: 200px;
-}
-
-.log .indent {
-  margin-left: 6px;
-  padding-left: 4px;
-  border-left: 1px solid lightgray;
-}
-
-.log ol.scope-chain {
-  list-style-type: none;
-  padding: 4px;
-  background: lightgray;
-}
-
-.log ol.scope-chain:before {
-  content: 'enter ';
-  color: gray;
-}
-
-.log ol.scope-chain li {
-  display: inline-block;
-}
-
-.log ol.scope-chain li:before {
-  content: ' → ';
-}
-
-.log ol.scope-chain li:first-child:before {
-  content: '';
-}
-
-.log ol.scope-chain li .scope:after {
-  content: '()';
-}
-
-.log.filtering .mini:not(.filtered) {
-  opacity: 0.35;
-}
+  #slider {
+    margin: 0 1em;
+  }
 </style>
-<title>SlowmoJS</title>
-<a href="https://github.com/toolness/slowmo-js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
-<h1>SlowmoJS</h1>
-<p>Javascript in Slow Motion.</p>
-<textarea id="code">for (var i = 0; i < 3; i++) {
-  print("hey " + i);
-}</textarea>
-<a href="" id="share-link">Link to this code</a>
-<div id="output" class="log"><div class="current-indent"></div></div>
-<script>
-var require = {
-  shim: {
-    'jquery-tipsy': {
-      deps: ['jquery'],
-      exports: 'jQuery'
+</head>
+<body>
+<h1>JS Playback</h1>
+<div id="slider"></div>
+<p>
+  <span id="info-line" class="info"></span>
+</p>
+
+<pre id="input">
+function binaryIndexOf(list, searchElement) {
+  'use strict';
+
+  var minIndex = 0;
+  var maxIndex = list.length - 1;
+  var currentIndex;
+  var currentElement;
+
+  while (minIndex <= maxIndex) {
+    currentIndex = (minIndex + maxIndex) / 2 | 0;
+    currentElement = list[currentIndex];
+
+    if (currentElement < searchElement) {
+      minIndex = currentIndex + 1;
+    }
+    else if (currentElement > searchElement) {
+      maxIndex = currentIndex - 1;
+    }
+    else {
+      return currentIndex;
     }
   }
-};
-</script>
+
+  return -1;
+}
+
+var arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+binaryIndexOf(arr, 5);
+</pre>
+<div id="output">
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+<script type="text/javascript" src="jquery-ui.min.js"></script>
 <script src="require.js"></script>
 <script>
 var MAX_EXEC_MS = 250;
@@ -170,72 +122,43 @@ var EXPOSED_GLOBALS = [
   "undefined"
 ];
 
+var input, frames, frameIndex, markers = [];
+
 function output(type, msg) {
   var div = $('<div></div>');
-  div.addClass(type).text(msg).appendTo("#output .current-indent");
+  div.addClass(type).text(msg).appendTo("#output");
 }
 
-function makeHighlight(code, range, className, title) {
-  var span = $('<span></span>');
-  var highlight = $('<span></span>').addClass(className)
-    .text(code.slice(range[0], range[1]) || ' ');
-  var begin = document.createTextNode(code.slice(0, range[0]));
-  var end = document.createTextNode(code.slice(range[1]));
-  
-  if (title)
-    highlight.attr("title", title).tipsy();
-  return span.append(begin).append(highlight).append(end);
+var Range = ace.require("ace/range").Range;
+
+function removeMarkers() {
+  while (markers.length) {
+    input.getSession().removeMarker(markers.pop().id);
+  }
+}
+
+function addMarker(location, secondary) {
+  var doc    = input.getSession().getDocument()
+    , start  = doc.indexToPosition(location[0], 0)
+    , end    = doc.indexToPosition(location[1], 0)
+    , range  = new Range(start.row, start.column, end.row, end.column)
+    , marker = {
+      id      : input.getSession().addMarker(
+        range
+        , secondary ? "supporting-code" : "active-code"
+      )
+      , range : range
+    };
+
+  markers.push(marker);
 }
 
 function outputHighlight(code, range, caption, secondaryRange,
                          highlightTitle, secondaryTitle) {
-  var div = $('<pre class="code"></pre>');
-  var codeSpan = makeHighlight(code, range, "highlight-1",
-                               highlightTitle).appendTo(div);
-  
-  if (!caption)
-    caption = $('<div class="desc">&nbsp;</div>');
-  
-  if (secondaryRange) {
-    var newChild, oldChild;
-    if (secondaryRange[1] < range[0]) {
-      oldChild = codeSpan[0].firstChild;
-      newChild = makeHighlight(oldChild.nodeValue, secondaryRange, 
-                               "highlight-2", secondaryTitle)[0];
-    } else if (secondaryRange[0] > range[1]) {
-      oldChild = codeSpan[0].lastChild;
-      newChild = makeHighlight(oldChild.nodeValue,
-                               [secondaryRange[0] - range[1],
-                                secondaryRange[1] - range[1]], 
-                               "highlight-2", secondaryTitle)[0];
-    } else {
-      // TODO: Implement this.
-    }
-    if (newChild && oldChild)
-      codeSpan[0].replaceChild(newChild, oldChild);
-  }
-  
-  $('<div class="mini"></div>').append(div).append(caption)
-    .appendTo("#output .current-indent")
-    .data("ranges", [range].concat(secondaryRange ? [secondaryRange] : []));
-}
-
-function filterRange(start, end) {
-  if (start === end) {
-    $('.log').removeClass('filtering');
-    $('.log .mini').removeClass('filtered');
-    return;
-  }
-  
-  $('.log').addClass('filtering');
-  
-  $('.log .mini').removeClass('filtered').each(function() {
-    $(this).data("ranges").forEach(function(range) {
-      if (range[0] <= start && range[1] >= end) {
-        $(this).addClass("filtered");
-      }
-    }, this);
-  });
+  frames.push({
+    caption  : caption
+    , ranges : secondaryRange ? [range, secondaryRange] : [range]
+  })
 }
 
 function LogListeners(listeners) {
@@ -264,27 +187,7 @@ function describeVar(name, value) {
   return span;
 }
 
-// http://stackoverflow.com/questions/2090551/parse-query-string-in-javascript
-function getQueryVariable(variable) {
-  var query = window.location.search.substring(1);
-  var vars = query.split('&');
-  for (var i = 0; i < vars.length; i++) {
-    var pair = vars[i].split('=');
-    if (decodeURIComponent(pair[0]) == variable) {
-      return decodeURIComponent(pair[1]);
-    }
-  }
-}
-
-function setShareLink(code, filterRange) {
-  var url = location.protocol + "//" + location.host + location.pathname +
-            "?code=" + encodeURIComponent(code) +
-            "&filterrange=" + encodeURIComponent(filterRange.join('-'));
-  $("#share-link").attr("href", url);
-}
-
 define("main", function(require) {
-  var $ = require("jquery-tipsy");
   var Scope = require("slowmo/scope");
   var Attr = require("slowmo/attr");
   var ScopeMangler = require("slowmo/scope-mangler");
@@ -292,22 +195,42 @@ define("main", function(require) {
   var LoopInserter = require("slowmo/loop-inserter");
   var falafel = require("falafel");
   var timeout;
-  var callStack = [];
   var lastCode;
-  var lastFilterRange = [];
-  var updateFilter = function updateFilter(force) {
-    var codeArea = $("#code")[0];
-    var range = [codeArea.selectionStart, codeArea.selectionEnd];
-    
-    if ((range[0] !== lastFilterRange[0] ||
-         range[1] !== lastFilterRange[1]) || force === true) {
-      lastFilterRange = range;
-      filterRange(range[0], range[1]);
-      setShareLink(lastCode, lastFilterRange);
+
+  input = window.ace.edit($('#input')[0]);
+  input.setTheme("ace/theme/xcode");
+  input.getSession().setMode("ace/mode/javascript");
+  input.getSession().setUseSoftTabs(true);
+  input.getSession().setTabSize(2);
+  input.setShowPrintMargin(false);
+  input.setFontSize('inherit');
+
+  function selectFrame(index) {
+    var frame = frames[index];
+    removeMarkers();
+    var ranges = frame.ranges;
+    for(var i = 0; i < ranges.length; i++) {
+      addMarker(ranges[i], i);
     }
-  };
+    $('#info-line').empty()
+    if (frame.caption) {
+      $('#info-line').append(frame.caption.clone());
+    }
+  }
+
+  $('#slider').slider({
+    min      : 0
+    , step   : 1
+    , slide  : function( event, ui ) {
+      selectFrame(ui.value);
+    }
+  });
+
   var execute = function execute() {
-    var code = $("#code").val();
+    $('#output').empty();
+    frameIndex = -1;
+    frames     = [];
+    var code = input.getValue();
     var attrLog = LogListeners({
       call: function(attr, obj, prop, args, range) {
         outputHighlight(code, range,
@@ -335,30 +258,6 @@ define("main", function(require) {
       }
     });
     var scopeLog = LogListeners({
-      enter: function(scope) {
-        if (scope.name == "GLOBAL")
-          return;
-        var newIndent = $('<div class="indent current-indent"></div>');
-        var currIndent = $("#output .current-indent");
-        var scopes = $('<ol class="scope-chain"></ol>').appendTo(newIndent);
-        var textCallStack = [];
-        callStack.push(scope);
-        callStack.forEach(function(scope) {
-          $('<li></li>')
-            .append($('<span class="scope"></span>').text(scope.name))
-            .appendTo(scopes);
-          textCallStack.push(scope.name + '()');
-        });
-        newIndent.attr("title", "Inside " + textCallStack.join(' > '));
-        currIndent.removeClass("current-indent").append(newIndent);
-      },
-      leave: function(scope) {
-        callStack.pop();
-        if (scope.name == "GLOBAL")
-          return;
-        $("#output .current-indent").removeClass("current-indent")
-          .parent().addClass("current-indent");
-      },
       declare: function(scope, name, value, range) {
         if (!range) return;
         outputHighlight(code, range, describeVar(name, value), null,
@@ -407,8 +306,7 @@ define("main", function(require) {
     if (lastCode == code)
       return;
     lastCode = code;
-    setShareLink(lastCode, [0, 0]);
-    $("#output > .current-indent").empty();
+    
     if (!code.trim())
       return output("error", "no code to run!");
     try {
@@ -448,31 +346,23 @@ define("main", function(require) {
         outputHighlight(code, e.range);
       return output("error", e.toString());
     }
-    updateFilter(true);
+
+    $('#slider').slider("value", 0);
+    $('#slider').slider("option", "max", frames.length-1);
+    selectFrame(0);
   };
   
-  $("#code").keyup(function() {
-    clearTimeout(timeout);
-    timeout = setTimeout(execute, RE_EXEC_MS);
-  }).on("select keyup mouseup", updateFilter);
-
-  function init() {
-    var code = getQueryVariable("code");
-    if (code !== undefined)
-      $("#code").val(code);
-    var filterrange = getQueryVariable("filterrange") || "0-0";
-    try {
-      filterrange = filterrange.split('-');
-      $("#code")[0].selectionStart = parseInt(filterrange[0]);
-      $("#code")[0].selectionEnd = parseInt(filterrange[1]);
-    } finally {
-      $("#code").focus();
-      execute();
+  input.on('change', function() {
+    if (timeout) {
+      clearTimeout(timeout);
     }
-  }
-  
-  init();
+    timeout = setTimeout(execute, RE_EXEC_MS);
+  });
+
+  execute();
 });
 
 require(["main"], function() {});
 </script>
+</body>
+</html>
